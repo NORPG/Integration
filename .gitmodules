@@ -1,0 +1,9 @@
+[submodule "can"]
+	path = can
+	url = git@github.com:NORPG/can.git
+[submodule "e_paper"]
+	path = e_paper
+	url = git@github.com:NORPG/e_paper.git
+[submodule "UART"]
+	path = UART
+	url = git@github.com:NORPG/UART.git
