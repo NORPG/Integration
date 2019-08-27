@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     IT8951_Cmd_DisplayArea(0, 0, gulPanelW, gulPanelH, 2,
 			   (Sys_info->uiImageBufBase), 1);;
     for (unsigned char j = 0; j < 255; j++) {
-	sprintf(ch_buf[0], "1 2 3 4 5 6 7 ");
+	sprintf(ch_buf[0], " 0 1 2 3 4 5 6 7 8 9 ");
 	for (int i = 0; (i < strlen(ch_buf[0]) && i < 16); i++) {
 
 	    dis_num(Sys_info, src, ch_buf[0][i], 0, i * 50);
