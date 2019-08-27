@@ -14,6 +14,7 @@ int evpd, page_code;
 
 int main(int argc, char *argv[])
 {
+    char ch_buf[32][24] = { 0 };
     int s;
 
     /*
@@ -45,6 +46,13 @@ int main(int argc, char *argv[])
 			     gulPanelW, gulPanelH);
     IT8951_Cmd_DisplayArea(0, 0, gulPanelW, gulPanelH, 2,
 			   (Sys_info->uiImageBufBase), 1);
+	int num = 255;
+    sprintf(ch_buf[0], "%3d", num);
+    for (int i = 0; i < strlen(ch_buf[0]); i++) {
+	dis_num(Sys_info, src, ch_buf[0][i], 0, i * 50);
+    }
+    IT8951_Cmd_DisplayArea(0, 0, 50, 1200, 2,
+			   (Sys_info->uiImageBufBase), 1);
 
     while (1) {
 	struct can_frame *r_frame;
@@ -56,13 +64,17 @@ int main(int argc, char *argv[])
 	    int num = r_frame->data[3] % 10;
 	    if (r_frame->data[0] == 0x03) {
 		if (r_frame->data[1] == 0x02) {
-		    memset((src), 0xF0, (50 * 100));
-		    IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), 800, 600, 50, 100);	//_
+//                  memset((src), 0xF0, (50 * 100));
+//                  IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), 0, 0, 50, 1200);  //_
 
 		    switch (r_frame->data[2]) {
 		    case 0x10:
-			dis_num(Sys_info, src, num, 800, 600);
-			IT8951_Cmd_DisplayArea(800, 600, 50, 50, 2,
+			sprintf(ch_buf[0], "%3d", r_frame->data[3]);
+			for (int i = 0; i < strlen(ch_buf[0]); i++) {
+			    dis_num(Sys_info, src, ch_buf[0][i], 0,
+				    i * 50);
+			}
+			IT8951_Cmd_DisplayArea(0, 0, 50, 1200, 2,
 					       (Sys_info->uiImageBufBase),
 					       1);
 			break;
