@@ -53,6 +53,8 @@ int main(int argc, char *argv[])
 	}
 	IT8951_Cmd_DisplayArea(0, 0, 50, 1200, 2,
 			       (Sys_info->uiImageBufBase), 1);
+    IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), 0, 0,
+			     gulPanelW, gulPanelH);
     }
 
 
