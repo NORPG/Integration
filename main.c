@@ -12,6 +12,8 @@ DWord gulPanelW, gulPanelH;
 char *path;
 int evpd, page_code;
 
+void dis_line(SystemInfo * Sys_info, Byte * src, unsigned char line, char **ch_buf);
+
 int main(int argc, char *argv[])
 {
     char ch_buf[32][24] = { 0 };
@@ -65,20 +67,19 @@ int main(int argc, char *argv[])
 			sprintf(ch_buf[0], "%3d %2d %3d %2d",
 				r_frame->data[3], r_frame->data[4],
 				r_frame->data[5], r_frame->data[6]);
-			for (int i = 0; (i < strlen(ch_buf[0]) && i < 24);
-			     i++) {
-			    dis_num(Sys_info, src, ch_buf[0][i], 0,
-				    i * 50);
-			}
-			IT8951_Cmd_DisplayArea(0, 0, 50, 1200, 2,
-					       (Sys_info->uiImageBufBase),
-					       1);
-			IT8951_Cmd_LoadImageArea(src,
-						 (Sys_info->
-						  uiImageBufBase), 0, 0,
-						 gulPanelW, gulPanelH);
+			    dis_line(Sys_info, src, 0, ch_buf);
 			break;
 		    case 0x11:
+			if (r_frame->data[3] < 4) {
+			    int valx =
+				r_frame->data[4] << 8 + r_frame->data[5];
+			    int valy =
+				r_frame->data[6] << 8 + r_frame->data[7];
+
+			    sprintf(ch_buf[r_frame->data[3] + 1],
+				    "%5d %5d", valx, valy);
+			    dis_line(Sys_info, src, r_frame->data[3] + 1, ch_buf);
+			}
 			break;
 		    case 0x12:
 			break;
@@ -89,17 +90,30 @@ int main(int argc, char *argv[])
 		    case 0x15:
 			break;
 		    }
+		    memset((src), 0xF0, (gulPanelW * gulPanelH));	//All white
+		    IT8951_Cmd_LoadImageArea(src,
+					     (Sys_info->uiImageBufBase),
+					     0, 0, gulPanelW, gulPanelH);
 		    /*
 		     *      do something
 		     */
 		}
 	    }
 	}
-
-
 	free(r_frame);
 	sleep(1);
     }
 
     free(Sys_info);
+}
+
+void dis_line(SystemInfo * Sys_info, Byte * src, unsigned char line,
+	      char **ch_buf)
+{
+    for (int i = 0; (i < strlen(ch_buf[line])
+		     && i < 24); i++) {
+	dis_num(Sys_info, src, ch_buf[line][i], line * 50, i * 50);
+    }
+    IT8951_Cmd_DisplayArea(line * 50, 0, 50, 1200, 2,
+			   (Sys_info->uiImageBufBase), 1);
 }
