@@ -46,18 +46,6 @@ int main(int argc, char *argv[])
 			     gulPanelW, gulPanelH);
     IT8951_Cmd_DisplayArea(0, 0, gulPanelW, gulPanelH, 2,
 			   (Sys_info->uiImageBufBase), 1);;
-    for (unsigned char j = 0; j < 255; j++) {
-	sprintf(ch_buf[0], " 0 1 2 3 4 5 6 7 8 9 ");
-	for (int i = 0; (i < strlen(ch_buf[0]) && i < 24); i++) {
-
-	    dis_num(Sys_info, src, ch_buf[0][i], 0, i * 50);
-	}
-	IT8951_Cmd_DisplayArea(0, 0, 50, 1200, 2,
-			       (Sys_info->uiImageBufBase), 1);
-    IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), 0, 0,
-			     gulPanelW, gulPanelH);
-    }
-
 
     while (1) {
 	struct can_frame *r_frame;
@@ -74,14 +62,21 @@ int main(int argc, char *argv[])
 
 		    switch (r_frame->data[2]) {
 		    case 0x10:
-			sprintf(ch_buf[0], "%3d", r_frame->data[3]);
-			for (int i = 0; i < strlen(ch_buf[0]); i++) {
+			sprintf(ch_buf[0], "%3d %2d %3d %2d",
+				r_frame->data[3], r_frame->data[4],
+				r_frame->data[5], r_frame->data[6]);
+			for (int i = 0; (i < strlen(ch_buf[0]) && i < 24);
+			     i++) {
 			    dis_num(Sys_info, src, ch_buf[0][i], 0,
 				    i * 50);
 			}
 			IT8951_Cmd_DisplayArea(0, 0, 50, 1200, 2,
 					       (Sys_info->uiImageBufBase),
 					       1);
+			IT8951_Cmd_LoadImageArea(src,
+						 (Sys_info->
+						  uiImageBufBase), 0, 0,
+						 gulPanelW, gulPanelH);
 			break;
 		    case 0x11:
 			break;
