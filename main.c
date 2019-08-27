@@ -45,14 +45,16 @@ int main(int argc, char *argv[])
     IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), 0, 0,
 			     gulPanelW, gulPanelH);
     IT8951_Cmd_DisplayArea(0, 0, gulPanelW, gulPanelH, 2,
-			   (Sys_info->uiImageBufBase), 1);
-	int num = 255;
-    sprintf(ch_buf[0], "%3d", num);
-    for (int i = 0; i < strlen(ch_buf[0]); i++) {
-	dis_num(Sys_info, src, ch_buf[0][i], 0, i * 50);
+			   (Sys_info->uiImageBufBase), 1);;
+    for (unsigned char j = 0; j < 255; j++) {
+	sprintf(ch_buf[0], "%3d", j);
+	for (int i = 0; i < strlen(ch_buf[0]); i++) {
+	    dis_num(Sys_info, src, ch_buf[0][i], 0, i * 50);
+	}
+	IT8951_Cmd_DisplayArea(0, 0, 50, 1200, 2,
+			       (Sys_info->uiImageBufBase), 1);
     }
-    IT8951_Cmd_DisplayArea(0, 0, 50, 1200, 2,
-			   (Sys_info->uiImageBufBase), 1);
+
 
     while (1) {
 	struct can_frame *r_frame;
