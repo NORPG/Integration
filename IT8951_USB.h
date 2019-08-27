@@ -33,5 +33,5 @@ void IT8951_Cmd_DisplayArea(DWord, DWord, DWord, DWord, DWord, DWord,
 			    DWord);
 void IT8951_Cmd_LoadImageArea(Byte *, DWord, DWord, DWord, DWord, DWord);
 void IT8951_Cmd_SetTemp(TempArg);
-void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y);
+void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y);
 #endif

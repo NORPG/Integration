@@ -10,10 +10,10 @@ extern int gulPanelH;
 extern unsigned char sense_buffer[SENSE_LEN];
 extern unsigned char data_buffer[BLOCK_LEN * 256];
 
-void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y)
+void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y)
 {
-    switch (num) {
-    case 0:
+    switch (ch) {
+    case '0':
 	memset((src), 0x00, (4 * 26));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 26);	//_
 
@@ -26,12 +26,12 @@ void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y)
 	memset((src), 0x00, (30 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 32, 30, 4);	//|
 	break;
-    case 1:
+    case '1':
 	memset((src), 0x00, (30 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10,
 				 y + 23, 30, 4);
 	break;
-    case 2:
+    case '2':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 30);	//_
 
@@ -47,7 +47,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y)
 	memset((src), 0x00, (15 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 36, 15, 4);	//|
 	break;
-    case 3:
+    case '3':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 30);	//_
 
@@ -63,7 +63,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y)
 	memset((src), 0x00, (15 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 36, 15, 4);	//|
 	break;
-    case 4:
+    case '4':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 4, 30);	//-
 
@@ -73,7 +73,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y)
 	memset((src), 0x00, (3 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 36, 34, 4);	//|
 	break;
-    case 5:
+    case '5':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 30);	//_
 
@@ -89,7 +89,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y)
 	memset((src), 0x00, (15 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 36, 15, 4);	//|
 	break;
-    case 6:
+    case '6':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 30);	//_
 
@@ -102,7 +102,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y)
 	memset((src), 0x00, (15 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 36, 15, 4);	//|
 	break;
-    case 7:
+    case '7':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 40, y + 10, 4, 30);	//_
 
@@ -112,7 +112,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y)
 	memset((src), 0x00, (30 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 36, 30, 4);	//|
 	break;
-    case 8:
+    case '8':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 30);	//_
 
@@ -128,7 +128,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, int num, int x, int y)
 	memset((src), 0x00, (30 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 36, 30, 4);	//|
 	break;
-    case 9:
+    case '9':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 40, y + 10, 4, 26);	//_
 
