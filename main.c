@@ -77,7 +77,6 @@ int main(int argc, char *argv[])
 				r_frame->data[4] << 8 + r_frame->data[5];
 			    int valy =
 				r_frame->data[6] << 8 + r_frame->data[7];
-
 			    sprintf(ch_buf[r_frame->data[3] + 1],
 				    "%5d %5d", valx, valy);
 			    dis_line(Sys_info, src, r_frame->data[3] + 1,
@@ -85,12 +84,45 @@ int main(int argc, char *argv[])
 			}
 			break;
 		    case 0x12:
+			sprintf(ch_buf[5], "%1d", r_frame->data[3]);
+			dis_line(Sys_info, src, 5, ch_buf);
 			break;
-		    case 0x13:
-			break;
-		    case 0x14:
-			break;
+		    case 0x13:{
+			    int valx =
+				r_frame->data[3] << 4 + r_frame->data[4];
+			    int valy =
+				r_frame->data[5] << 4 + r_frame->data[6];
+			    sprintf(ch_buf[6], "%4d %4d %2x", valx, valy,
+				    r_frame->data[7]);
+			    dis_line(Sys_info, src, 6, ch_buf);
+			    break;
+			}
+		    case 0x14:{
+			    int vall =
+				r_frame->data[3] << 8 + r_frame->data[4];
+			    int valr =
+				r_frame->data[5] << 8 + r_frame->data[6];
+			    sprintf(ch_buf[r_frame->data[3] + 1],
+				    "%5d %5d", vall, valr);
+			    dis_line(Sys_info, src, 7, ch_buf);
+			    break;
+			}
 		    case 0x15:
+			switch (r_frame->data[3]) {
+			case 0x00:
+			    sprintf(ch_buf[8],
+				    "%3d %3d %3d %3d", r_frame->data[4],
+				    r_frame->data[5], r_frame->data[6],
+				    r_frame->data[7]);
+			    dis_line(Sys_info, src, 8, ch_buf);
+			    break;
+			case 0x01:
+			    sprintf(ch_buf[9],
+				    "%3d %3d", r_frame->data[4],
+				    r_frame->data[5]);
+			    dis_line(Sys_info, src, 9, ch_buf);
+			    break;
+			}
 			break;
 		    }
 		    memset((src), 0xF0, (gulPanelW * gulPanelH));	//All white
@@ -124,7 +156,7 @@ void dis_line(SystemInfo * Sys_info, Byte * Src, unsigned char line,
 void test_num(SystemInfo * Sys_info, Byte * Src, char ch_buf[32][24])
 {
     for (int i = 0; i < 255; i++) {
-	sprintf(ch_buf[0], "%d.%d-%d",i,i,i);
+	sprintf(ch_buf[0], "%d.%d-%d", i, i, i);
 
 
 	dis_line(Sys_info, Src, 0, ch_buf);
