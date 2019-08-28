@@ -18,7 +18,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y)
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 26);	//_
 
 	memset((src), 0x00, (4 * 26));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 40, y + 10, 4, 26);	//_
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 39, y + 10, 4, 26);	//_
 
 	memset((src), 0x00, (30 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 30, 4);	//|
@@ -36,7 +36,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y)
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 30);	//_
 
 	memset((src), 0x00, (4 * 10));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 40, y + 10, 4, 30);	//_
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 39, y + 10, 4, 30);	//_
 
 	memset((src), 0x00, (4 * 10));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 4, 30);	//-
@@ -52,33 +52,30 @@ void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y)
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 30);	//_
 
 	memset((src), 0x00, (4 * 30));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 40, y + 10, 4, 30);	//_
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 39, y + 10, 4, 30);	//_
 
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 4, 30);	//-
 
 	memset((src), 0x00, (19 * 4));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 36, 15, 4);	//|
-
-	memset((src), 0x00, (15 * 4));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 36, 15, 4);	//|
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 36, 30, 4);	//|
 	break;
     case '4':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 4, 30);	//-
 
 	memset((src), 0x00, (19 * 4));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 19, 4);	//|
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 15, 4);	//|
 
 	memset((src), 0x00, (3 * 4));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 36, 34, 4);	//|
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 36, 30, 4);	//|
 	break;
     case '5':
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 30);	//_
 
 	memset((src), 0x00, (4 * 30));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 40, y + 10, 4, 30);	//_
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 39, y + 10, 4, 30);	//_
 
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 4, 30);	//-
@@ -104,7 +101,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y)
 	break;
     case '7':
 	memset((src), 0x00, (4 * 30));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 40, y + 10, 4, 30);	//_
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 39, y + 10, 4, 30);	//_
 
 	memset((src), 0x00, (19 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 15, 4);	//|
@@ -117,7 +114,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y)
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 10, 4, 30);	//_
 
 	memset((src), 0x00, (4 * 30));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 40, y + 10, 4, 30);	//_
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 39, y + 10, 4, 30);	//_
 
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 4, 30);	//-
@@ -130,7 +127,7 @@ void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y)
 	break;
     case '9':
 	memset((src), 0x00, (4 * 30));
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 40, y + 10, 4, 26);	//_
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 39, y + 10, 4, 26);	//_
 
 	memset((src), 0x00, (4 * 30));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 4, 26);	//-
@@ -140,6 +137,14 @@ void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y)
 
 	memset((src), 0x00, (30 * 4));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 10, y + 32, 30, 4);	//|
+	break;
+    case '-':
+	memset((src), 0x00, (4 * 20));
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 25, y + 10, 4, 20);	//-
+	break;
+    case '.':
+	memset((src), 0x00, (4 * 26));
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 5, y + 45, 5, 5);	//.
 	break;
     }
 }
