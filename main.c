@@ -46,38 +46,53 @@ int main(int argc, char *argv[])
 	return 1;
     }
     Byte src[(1600 * 1200)];
+
     SystemInfo *Sys_info;	// SystemInfo structure
 
     path = argv[1];		// arg1: sg path of device
     evpd = page_code = 0;
 
-    /*
-     * 0x80: get system info
-     */
-    Sys_info = (SystemInfo *) malloc(sizeof(SystemInfo));
-    IT8951_Cmd_SysInfo(Sys_info);
+    printf("%d\n\r", argc);
+    if (argc == 2) {
+	/*
+	 * 0x80: get system info
+	 */
+	Sys_info = (SystemInfo *) malloc(sizeof(SystemInfo));
+	IT8951_Cmd_SysInfo(Sys_info);
 
-    /* 
-     * set full white
-     */
-    memset((src), 0xF0, (gulPanelW * gulPanelH));	//All white
-    IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), 0, 0,
-			     gulPanelW, gulPanelH);
-    IT8951_Cmd_DisplayArea(0, 0, gulPanelW, gulPanelH, 2,
-			   (Sys_info->uiImageBufBase), 1);
+	/* 
+	 * set full white
+	 */
+	memset((src), 0xF0, (gulPanelW * gulPanelH));	//All white
+	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), 0, 0,
+				 gulPanelW, gulPanelH);
+	IT8951_Cmd_DisplayArea(0, 0, gulPanelW, gulPanelH, 2,
+			       (Sys_info->uiImageBufBase), 1);
 
-    test_num(Sys_info, src, ch_buf);
-
+	test_num(Sys_info, src, ch_buf);
+    }
+    
     serialPrintf(serial_port, "Hello world Pi\n\r");
 
-    while (1) {
-	struct can_frame *r_frame;
+    serialPutchar(serial_port, 0xA5);
+    serialPutchar(serial_port, 0x5A);
+    serialPutchar(serial_port, 0x00);
+    serialPutchar(serial_port, 0x00);
+    serialPutchar(serial_port, 0x01);
 
-	r_frame = calloc(1, sizeof(*r_frame));
+
+    while (1) {
+	struct can_frame *r_frame = calloc(1, sizeof(*r_frame));
+
+	while (serialDataAvail(serial_port)) {
+	    int dat = serialGetchar(serial_port);	/* receive character serially */
+	    printf("%02X", dat);	//Receive HEX
+	    printf("\t");
+	    fflush(stdout);
+	}
 
 	if (recv_can(s, r_frame) == 0) {
 	    dump_can(r_frame);
-	    int num = r_frame->data[3] % 10;
 	    if (r_frame->data[0] == 0x03) {
 		if (r_frame->data[1] == 0x02) {
 
@@ -91,9 +106,9 @@ int main(int argc, char *argv[])
 		    case 0x11:
 			if (r_frame->data[3] < 4) {
 			    int valx =
-				r_frame->data[4] << 8 + r_frame->data[5];
+				(r_frame->data[4] << 8) + r_frame->data[5];
 			    int valy =
-				r_frame->data[6] << 8 + r_frame->data[7];
+				(r_frame->data[6] << 8) + r_frame->data[7];
 			    sprintf(ch_buf[r_frame->data[3] + 1],
 				    "%5d %5d", valx, valy);
 			    dis_line(Sys_info, src, r_frame->data[3] + 1,
@@ -106,9 +121,9 @@ int main(int argc, char *argv[])
 			break;
 		    case 0x13:{
 			    int valx =
-				r_frame->data[3] << 4 + r_frame->data[4];
+				(r_frame->data[3] << 4) + r_frame->data[4];
 			    int valy =
-				r_frame->data[5] << 4 + r_frame->data[6];
+				(r_frame->data[5] << 4) + r_frame->data[6];
 			    sprintf(ch_buf[6], "%4d %4d %2x", valx, valy,
 				    r_frame->data[7]);
 			    dis_line(Sys_info, src, 6, ch_buf);
@@ -116,9 +131,9 @@ int main(int argc, char *argv[])
 			}
 		    case 0x14:{
 			    int vall =
-				r_frame->data[3] << 8 + r_frame->data[4];
+				(r_frame->data[3] << 8) + r_frame->data[4];
 			    int valr =
-				r_frame->data[5] << 8 + r_frame->data[6];
+				(r_frame->data[5] << 8) + r_frame->data[6];
 			    sprintf(ch_buf[r_frame->data[3] + 1],
 				    "%5d %5d", vall, valr);
 			    dis_line(Sys_info, src, 7, ch_buf);
