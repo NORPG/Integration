@@ -28,6 +28,11 @@ int main(int argc, char *argv[])
     char bms_buf[48] = { 0 };
     int bms_id = 0;
     int bms_flag = 1;
+
+    char adas_buf[40] = { 0 };
+    int adas_id = 0;
+    int adas_flag = 1;
+
     /*
      * init can socket
      */
@@ -47,7 +52,7 @@ int main(int argc, char *argv[])
     if ((serial_adas = serialOpen("/dev/ttyUSB0", 9600)) < 0) {	/* open serial port */
 	fprintf(stderr, "Unable to open serial device: %s\n",
 		strerror(errno));
-      return 1;
+	return 1;
     }
 
 
@@ -73,12 +78,6 @@ int main(int argc, char *argv[])
 	/* 
 	 * set full white
 	 */
-	memset((src), 0xF0, (gulPanelW * gulPanelH));	//All white
-	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), 0, 0,
-				 gulPanelW, gulPanelH);
-	IT8951_Cmd_DisplayArea(0, 0, gulPanelW, gulPanelH, 2,
-			       (Sys_info->uiImageBufBase), 1);
-
     }
 
     {
@@ -89,6 +88,15 @@ int main(int argc, char *argv[])
 	serialPutchar(serial_bms, 0x01);
     }
 
+    {
+	serialPutchar(serial_adas, 0x2E);
+	serialPutchar(serial_adas, 0x01);
+	serialPutchar(serial_adas, 0x02);
+	serialPutchar(serial_adas, 0x40);
+	serialPutchar(serial_adas, 0x00);
+	serialPutchar(serial_adas, 0xBC);
+    }
+    sleep(10);
     {
 	serialPutchar(serial_adas, 0x2E);
 	serialPutchar(serial_adas, 0x01);
@@ -119,6 +127,10 @@ int main(int argc, char *argv[])
 	    if (dat != -1) {
 		printf("%02X ", dat);	//Receive HEX
 		fflush(stdout);
+		adas_buf[adas_id] = dat;
+		adas_id++;
+		if (adas_id == 48)
+		    adas_flag = 0;
 	    }
 	}
 
@@ -165,7 +177,7 @@ int main(int argc, char *argv[])
 				(r_frame->data[3] << 8) + r_frame->data[4];
 			    int valr =
 				(r_frame->data[5] << 8) + r_frame->data[6];
-			    sprintf(ch_buf[r_frame->data[3] + 1],
+			    sprintf(ch_buf[7],
 				    "%5d %5d", vall, valr);
 			    dis_line(Sys_info, src, 7, ch_buf);
 			    break;
@@ -231,6 +243,39 @@ int main(int argc, char *argv[])
 				     0, 0, gulPanelW, gulPanelH);
 	    bms_flag = 1;
 	    bms_id = 0;
+	}
+
+	if (adas_flag == 0) {
+	    sprintf(ch_buf[14],
+		    "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+		    adas_buf[0], adas_buf[1], adas_buf[2], adas_buf[3],
+		    adas_buf[4], adas_buf[5], adas_buf[6], adas_buf[7],
+		    adas_buf[8], adas_buf[9]);
+	    sprintf(ch_buf[15],
+		    "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+		    adas_buf[10], adas_buf[11], adas_buf[12], adas_buf[13],
+		    adas_buf[14], adas_buf[15], adas_buf[16], adas_buf[17],
+		    adas_buf[18], adas_buf[19]);
+	    sprintf(ch_buf[16],
+		    "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+		    adas_buf[20], adas_buf[21], adas_buf[22], adas_buf[23],
+		    adas_buf[24], adas_buf[25], adas_buf[26], adas_buf[27],
+		    adas_buf[28], adas_buf[29]);
+	    sprintf(ch_buf[17],
+		    "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+		    adas_buf[30], adas_buf[31], adas_buf[32], adas_buf[33],
+		    adas_buf[34], adas_buf[35], adas_buf[36], adas_buf[37],
+		    adas_buf[38], adas_buf[39]);
+	    dis_line(Sys_info, src, 14, ch_buf);
+	    dis_line(Sys_info, src, 15, ch_buf);
+	    dis_line(Sys_info, src, 16, ch_buf);
+	    dis_line(Sys_info, src, 17, ch_buf);
+	    memset((src), 0xF0, (gulPanelW * gulPanelH));	//All white
+	    IT8951_Cmd_LoadImageArea(src,
+				     (Sys_info->uiImageBufBase),
+				     0, 0, gulPanelW, gulPanelH);
+	    adas_flag = 1;
+	    adas_id = 0;
 	}
 
 	sleep(1);
