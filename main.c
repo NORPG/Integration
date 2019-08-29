@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 	serialPutchar(serial_bms, 0x01);
     }
 
-    {
+/*    {
 	serialPutchar(serial_adas, 0x2E);
 	serialPutchar(serial_adas, 0x01);
 	serialPutchar(serial_adas, 0x02);
@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 	serialPutchar(serial_adas, 0x00);
 	serialPutchar(serial_adas, 0xBC);
     }
-
+*/
     delay(1);
 
     while (1) {
