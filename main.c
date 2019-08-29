@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <errno.h>
 #include "can.h"
 #include "IT8951_USB.h"
+
+#include <wiringPi.h>
+#include <wiringSerial.h>
 
 unsigned char sense_buffer[SENSE_LEN];
 unsigned char data_buffer[BLOCK_LEN * 256];
@@ -30,6 +34,17 @@ int main(int argc, char *argv[])
 	return -1;
     }
 
+    int serial_port;
+    if ((serial_port = serialOpen("/dev/ttyS0", 9600)) < 0) {	/* open serial port */
+	fprintf(stderr, "Unable to open serial device: %s\n",
+		strerror(errno));
+	return 1;
+    }
+
+    if (wiringPiSetup() == -1) {	/* initializes wiringPi setup */
+	fprintf(stdout, "Unable to start wiringPi: %s\n", strerror(errno));
+	return 1;
+    }
     Byte src[(1600 * 1200)];
     SystemInfo *Sys_info;	// SystemInfo structure
 
@@ -52,6 +67,8 @@ int main(int argc, char *argv[])
 			   (Sys_info->uiImageBufBase), 1);
 
     test_num(Sys_info, src, ch_buf);
+
+    serialPrintf(serial_port, "Hello world Pi\n\r");
 
     while (1) {
 	struct can_frame *r_frame;
