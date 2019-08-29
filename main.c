@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     if ((serial_adas = serialOpen("/dev/ttyUSB0", 9600)) < 0) {	/* open serial port */
 	fprintf(stderr, "Unable to open serial device: %s\n",
 		strerror(errno));
-//	return 1;
+      return 1;
     }
 
 
@@ -79,7 +79,6 @@ int main(int argc, char *argv[])
 	IT8951_Cmd_DisplayArea(0, 0, gulPanelW, gulPanelH, 2,
 			       (Sys_info->uiImageBufBase), 1);
 
-	test_num(Sys_info, src, ch_buf);
     }
 
     {
@@ -90,7 +89,7 @@ int main(int argc, char *argv[])
 	serialPutchar(serial_bms, 0x01);
     }
 
-/*    {
+    {
 	serialPutchar(serial_adas, 0x2E);
 	serialPutchar(serial_adas, 0x01);
 	serialPutchar(serial_adas, 0x02);
@@ -98,7 +97,7 @@ int main(int argc, char *argv[])
 	serialPutchar(serial_adas, 0x00);
 	serialPutchar(serial_adas, 0xBC);
     }
-*/
+
     delay(1);
 
     while (1) {
@@ -202,19 +201,23 @@ int main(int argc, char *argv[])
 	free(r_frame);
 
 	if (bms_flag == 0) {
-	    sprintf(ch_buf[10], "%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X",
+	    sprintf(ch_buf[10],
+		    "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 		    bms_buf[0], bms_buf[1], bms_buf[2], bms_buf[3],
 		    bms_buf[4], bms_buf[5], bms_buf[6], bms_buf[7],
 		    bms_buf[8], bms_buf[9], bms_buf[10], bms_buf[11]);
-	    sprintf(ch_buf[11], "%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X",
+	    sprintf(ch_buf[11],
+		    "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 		    bms_buf[12], bms_buf[13], bms_buf[14], bms_buf[15],
 		    bms_buf[16], bms_buf[17], bms_buf[18], bms_buf[19],
 		    bms_buf[20], bms_buf[21], bms_buf[22], bms_buf[23]);
-	    sprintf(ch_buf[12], "%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X",
+	    sprintf(ch_buf[12],
+		    "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 		    bms_buf[24], bms_buf[25], bms_buf[26], bms_buf[27],
 		    bms_buf[28], bms_buf[29], bms_buf[30], bms_buf[31],
 		    bms_buf[32], bms_buf[33], bms_buf[34], bms_buf[35]);
-	    sprintf(ch_buf[13], "%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X",
+	    sprintf(ch_buf[13],
+		    "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
 		    bms_buf[36], bms_buf[37], bms_buf[38], bms_buf[39],
 		    bms_buf[40], bms_buf[41], bms_buf[42], bms_buf[43],
 		    bms_buf[44], bms_buf[45], bms_buf[46], bms_buf[47]);
@@ -226,6 +229,8 @@ int main(int argc, char *argv[])
 	    IT8951_Cmd_LoadImageArea(src,
 				     (Sys_info->uiImageBufBase),
 				     0, 0, gulPanelW, gulPanelH);
+	    bms_flag = 1;
+	    bms_id = 0;
 	}
 
 	sleep(1);
