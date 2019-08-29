@@ -25,6 +25,9 @@ int main(int argc, char *argv[])
     char ch_buf[32][24] = { 0 };
     int s;
 
+    char bms_buf[48] = { 0 };
+    int bms_id = 0;
+    int bms_flag = 1;
     /*
      * init can socket
      */
@@ -34,12 +37,19 @@ int main(int argc, char *argv[])
 	return -1;
     }
 
-    int serial_port;
-    if ((serial_port = serialOpen("/dev/ttyS0", 9600)) < 0) {	/* open serial port */
+    int serial_bms, serial_adas;
+    if ((serial_bms = serialOpen("/dev/ttyS0", 9600)) < 0) {	/* open serial port */
 	fprintf(stderr, "Unable to open serial device: %s\n",
 		strerror(errno));
 	return 1;
     }
+
+    if ((serial_adas = serialOpen("/dev/ttyUSB0", 9600)) < 0) {	/* open serial port */
+	fprintf(stderr, "Unable to open serial device: %s\n",
+		strerror(errno));
+//	return 1;
+    }
+
 
     if (wiringPiSetup() == -1) {	/* initializes wiringPi setup */
 	fprintf(stdout, "Unable to start wiringPi: %s\n", strerror(errno));
@@ -71,24 +81,46 @@ int main(int argc, char *argv[])
 
 	test_num(Sys_info, src, ch_buf);
     }
-    
-    serialPrintf(serial_port, "Hello world Pi\n\r");
 
-    serialPutchar(serial_port, 0xA5);
-    serialPutchar(serial_port, 0x5A);
-    serialPutchar(serial_port, 0x00);
-    serialPutchar(serial_port, 0x00);
-    serialPutchar(serial_port, 0x01);
+    {
+	serialPutchar(serial_bms, 0xA5);
+	serialPutchar(serial_bms, 0x5A);
+	serialPutchar(serial_bms, 0x00);
+	serialPutchar(serial_bms, 0x00);
+	serialPutchar(serial_bms, 0x01);
+    }
 
+    {
+	serialPutchar(serial_adas, 0x2E);
+	serialPutchar(serial_adas, 0x01);
+	serialPutchar(serial_adas, 0x02);
+	serialPutchar(serial_adas, 0x40);
+	serialPutchar(serial_adas, 0x00);
+	serialPutchar(serial_adas, 0xBC);
+    }
+
+    delay(1);
 
     while (1) {
 	struct can_frame *r_frame = calloc(1, sizeof(*r_frame));
 
-	while (serialDataAvail(serial_port)) {
-	    int dat = serialGetchar(serial_port);	/* receive character serially */
-	    printf("%02X", dat);	//Receive HEX
-	    printf("\t");
-	    fflush(stdout);
+	while (serialDataAvail(serial_bms) && (bms_flag == 1)) {
+	    int dat = serialGetchar(serial_bms);	/* receive character serially */
+	    if (dat != -1) {
+		printf("%02X ", dat);	//Receive HEX
+		fflush(stdout);
+		bms_buf[bms_id] = dat;
+		bms_id++;
+		if (bms_id == 48)
+		    bms_flag = 0;
+	    }
+	}
+	while (serialDataAvail(serial_adas)) {
+	    int dat = serialGetchar(serial_adas);	/* receive character serially */
+	    if (dat != -1) {
+		printf("%02X ", dat);	//Receive HEX
+		fflush(stdout);
+	    }
 	}
 
 	if (recv_can(s, r_frame) == 0) {
@@ -168,6 +200,34 @@ int main(int argc, char *argv[])
 	    }
 	}
 	free(r_frame);
+
+	if (bms_flag == 0) {
+	    sprintf(ch_buf[10], "%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X",
+		    bms_buf[0], bms_buf[1], bms_buf[2], bms_buf[3],
+		    bms_buf[4], bms_buf[5], bms_buf[6], bms_buf[7],
+		    bms_buf[8], bms_buf[9], bms_buf[10], bms_buf[11]);
+	    sprintf(ch_buf[11], "%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X",
+		    bms_buf[12], bms_buf[13], bms_buf[14], bms_buf[15],
+		    bms_buf[16], bms_buf[17], bms_buf[18], bms_buf[19],
+		    bms_buf[20], bms_buf[21], bms_buf[22], bms_buf[23]);
+	    sprintf(ch_buf[12], "%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X",
+		    bms_buf[24], bms_buf[25], bms_buf[26], bms_buf[27],
+		    bms_buf[28], bms_buf[29], bms_buf[30], bms_buf[31],
+		    bms_buf[32], bms_buf[33], bms_buf[34], bms_buf[35]);
+	    sprintf(ch_buf[13], "%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X%2X",
+		    bms_buf[36], bms_buf[37], bms_buf[38], bms_buf[39],
+		    bms_buf[40], bms_buf[41], bms_buf[42], bms_buf[43],
+		    bms_buf[44], bms_buf[45], bms_buf[46], bms_buf[47]);
+	    dis_line(Sys_info, src, 10, ch_buf);
+	    dis_line(Sys_info, src, 11, ch_buf);
+	    dis_line(Sys_info, src, 12, ch_buf);
+	    dis_line(Sys_info, src, 13, ch_buf);
+	    memset((src), 0xF0, (gulPanelW * gulPanelH));	//All white
+	    IT8951_Cmd_LoadImageArea(src,
+				     (Sys_info->uiImageBufBase),
+				     0, 0, gulPanelW, gulPanelH);
+	}
+
 	sleep(1);
     }
 

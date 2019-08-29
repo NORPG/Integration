@@ -146,6 +146,18 @@ void dis_num(SystemInfo * Sys_info, Byte * src, char ch, int x, int y)
 	memset((src), 0x00, (4 * 26));
 	IT8951_Cmd_LoadImageArea(src, (Sys_info->uiImageBufBase), x + 5, y + 45, 5, 5);	//.
 	break;
+    case 'A':
+	break;
+    case 'B':
+	break;
+    case 'C':
+	break;
+    case 'D':
+	break;
+    case 'E':
+	break;
+    case 'F':
+	break;
     }
 }
 
